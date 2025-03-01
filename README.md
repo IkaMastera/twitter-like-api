@@ -12,7 +12,9 @@ This project automates the process of liking a tweet using Python and the Twitte
 ## Setup
 
 1. **Clone the repository** and navigate into the folder.
+
 2. **Create a virtual environment:**
+
    - Windows:
      ```
      python -m venv venv
@@ -23,10 +25,12 @@ This project automates the process of liking a tweet using Python and the Twitte
      python3 -m venv venv
      source venv/bin/activate
      ```
+
 3. **Install dependencies:**
    pip install tweepy python-dotenv
 4. **Configure credentials:**  
    Create a file named `.env` in the project root with:
+
    TWITTER_CONSUMER_KEY="your_api_key_here"
    TWITTER_CONSUMER_SECRET="your_api_key_secret_here"
    TWITTER_ACCESS_TOKEN="your_access_token_here"
