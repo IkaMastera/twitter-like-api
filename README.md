@@ -66,13 +66,15 @@ pip install tweepy python-dotenv praw
 
 Create a file named `.env` in the project root and add your API credentials:
 
-Twitter API Credentials
+Twitter API Credentials:
+
 TWITTER_CONSUMER_KEY="your_twitter_api_key_here"
 TWITTER_CONSUMER_SECRET="your_twitter_api_key_secret_here"
 TWITTER_ACCESS_TOKEN="your_twitter_access_token_here" TWITTER_ACCESS_SECRET="your_twitter_access_token_secret_here"
 TWITTER_BEARER_TOKEN="your_twitter_bearer_token_here" # Optional
 
-Reddit API Credentials
+Reddit API Credentials:
+
 REDDIT_CLIENT_ID="your_reddit_client_id_here"
 REDDIT_CLIENT_SECRET="your_reddit_client_secret_here"
 REDDIT_USER_AGENT="script:reddit_fetch:v1.0 (by /u/your_reddit_username)"
