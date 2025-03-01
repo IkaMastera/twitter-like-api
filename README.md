@@ -76,9 +76,7 @@ TWITTER_BEARER_TOKEN="your_twitter_bearer_token_here" # Optional
 Reddit API Credentials:
 
 REDDIT_CLIENT_ID="your_reddit_client_id_here"
-
-REDDIT_CLIENT_SECRET="your_reddit_client_secret_here"
-REDDIT_USER_AGENT="script:reddit_fetch:v1.0 (by /u/your_reddit_username)"
+REDDIT_CLIENT_SECRET="your_reddit_client_secret_here" REDDIT_USER_AGENT="script:reddit_fetch:v1.0 (by /u/your_reddit_username)"
 
 > **Important:**
 >
