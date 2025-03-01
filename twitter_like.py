@@ -24,7 +24,7 @@ access_secret = os.getenv("TWITTER_ACCESS_SECRET")
 bearer_token = os.getenv("TWITTER_BEARER_TOKEN")
 
 # Checking that all required Twitter cerdentials are provided for error handling
-if not consumer_key or not consumer_secret or not access_token or not access_secret
+if not consumer_key or not consumer_secret or not access_token or not access_secret:
     logging.error("Twitter API credentials not fully set in .env. Exiting")
     exit(1)
 
@@ -73,5 +73,5 @@ except tweepy.TweepyException as e:
             logging.error(f"Authentication failed or not authorized (HTTP {status_code}). Error: {e}")
         else:
             logging.error(f"Failed to like tweet (HTTP {status_code}). Error: {e}")
-        else:
-            logging.error(f"Unexpected error: {e}")       
+    else:
+        logging.error(f"Unexpected error: {e}")       
