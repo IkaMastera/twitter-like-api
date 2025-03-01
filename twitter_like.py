@@ -34,3 +34,44 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.FileHandler("twitter_script.log"), logging.StreamHandler()]
 )
+
+# Parse command-line argument for tweet ID to like
+argument_parser = argparse.ArgumentParser(description="Like a Tweet by ID using the Twitter API.")
+argument_parser.add_argument("tweet_id", help="The unique ID of the tweet to like.")
+parsed_args = argument_parser.parsed_args();
+target_tweet_id = parsed_args.tweet_id
+
+try: 
+    client = tweepy.Client(
+        bearer_token=bearer_token,
+        consumer_key=consumer_key,
+        consumer_secret=consumer_secret,
+        access_token=access_token,
+        access_token_secret=access_secret,
+        wait_on_rate_limit=True
+    )
+    logging.info("Authenticated to Twitter API successfully.")
+
+    # Use the client to like the tweet specified by tweet_id
+    response = client.like(tweet_id)
+    if hasattr(response, "errors") and response.errors:
+        # Log any errors returned by the API
+        logging.error(f"Twitter API error: response.errors")
+    else:
+        logging.info(f"Successfully liked tweet ID {tweet_id}.")
+
+except tweepy.TweepyException as e:
+    # Handle exceptions from the Tweepy library
+    if hasattr(e, "response") and e.response is not None:
+        status_code = e.response.status_code
+        if status_code == 429:
+            # Rate Limit error handler
+            reset_time = e.response.headers.get("x-rate-limit-reset")
+            logging.error(f"Rate limit reached. Pause requests until reset time: {reset_time}. Error: {e}")
+        elif status_code in (401, 403):
+            # Logging Authentication or authorization errors
+            logging.error(f"Authentication failed or not authorized (HTTP {status_code}). Error: {e}")
+        else:
+            logging.error(f"Failed to like tweet (HTTP {status_code}). Error: {e}")
+        else:
+            logging.error(f"Unexpected error: {e}")       
