@@ -4,7 +4,7 @@ TWITTER LIKE SCRIPT
 - Handles rate limits and authentication errors, logging events to a file and console.
 Usage:
     1. Set up environment variables in .env (Twitter API keys and tokens).
-    2. Run: pyhton twitter_like.py <tweet_id>
+    2. Run: python twitter_like.py <tweet_id>
 """
 
 
