@@ -24,3 +24,5 @@ Your client app is not configured with the appropriate oauth1 app permissions fo
 2025-03-01 17:02:06,941 [WARNING] Rate limit exceeded. Sleeping for 903 seconds.
 2025-03-01 17:03:38,407 [INFO] Authenticated to Twitter API successfully.
 2025-03-01 17:03:38,726 [WARNING] Rate limit exceeded. Sleeping for 811 seconds.
+2025-03-01 17:29:05,728 [INFO] Authenticated to Twitter API successfully.
+2025-03-01 17:29:06,388 [WARNING] Rate limit exceeded. Sleeping for 903 seconds.
