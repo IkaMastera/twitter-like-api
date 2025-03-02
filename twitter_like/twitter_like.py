@@ -7,13 +7,15 @@ Usage:
     2. Run: python twitter_like.py <tweet_id>
     3. You can get your twitter ID by going in the tweet you want to like, https://x.com/lexfridman/status/1895770434580464107 in this example your tweet_id is 1895770434580464107.
 """
-import sys
-sys.stdout.reconfigure(encoding='utf-8')
+
 import os
 import logging
 import tweepy
-from dotenv import load_dotenv
 import argparse
+import time
+from dotenv import load_dotenv
+from twitter_like.twitter_error_handler import handle_twitter_error
+
 
 # Logs messages to both console and file with timestamps good practice
 def setup_logging():
@@ -43,7 +45,6 @@ def load_credentials():
         exit(1)
     return credentials
 
-
 def parse_arguments():
     # Parse command-line argument for tweet ID to like
     argument_parser = argparse.ArgumentParser(description="Like a Tweet by ID using the Twitter API.")
@@ -64,33 +65,24 @@ def initialize_twitter_client(credentials):
     )
     logging.info("Authenticated to Twitter API successfully.")
     return client
-
+               
 def like_tweet(client, tweet_id):
     try:
         # Use the client to like the tweet specified by tweet_id
         response = client.like(tweet_id)
+
         if hasattr(response, "errors") and response.errors:
-            # Log any errors returned by the API
-            logging.error(f"Twitter API error: response.errors")
+            logging.error(f"Twitter API error: {response.errors}")
+        elif not response.data:
+            logging.warning(f"Tweet ID {tweet_id} does not exist or is unavailable.")
         else:
-            logging.info(f"Successfully liked tweet ID {tweet_id}.")
-            exit(0)
+            logging.info(f"Successfully liked tweet by ID: {tweet_id}.")
+            exit(0) # Exit after success
+
+        return response
 
     except tweepy.TweepyException as e:
-        # Handle exceptions from the Tweepy library
-        if hasattr(e, "response") and e.response is not None:
-            status_code = e.response.status_code
-            if status_code == 429:
-                # Rate Limit error handler
-                reset_time = e.response.headers.get("x-rate-limit-reset")
-                logging.error(f"Rate limit reached. Pause requests until reset time: {reset_time}. Error: {e}")
-            elif status_code in (401, 403):
-                # Logging Authentication or authorization errors
-                logging.error(f"Authentication failed or not authorized (HTTP {status_code}). Error: {e}")
-            else:
-                logging.error(f"Failed to like tweet (HTTP {status_code}). Error: {e}")
-        else:
-            logging.error(f"Unexpected error: {e}")
+        return handle_twitter_error(e, like_tweet, client, tweet_id)
 
 def main():
     setup_logging()

@@ -10,6 +10,8 @@ Example:
     python reddit_fetch.py python
 """
 
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 import os
 import logging
 import argparse
@@ -67,5 +69,5 @@ def main():
         logging.info("-" * 40)
 
 if __name__ == "__main__":
-    main()        
+    main()     
 

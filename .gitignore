@@ -2,3 +2,4 @@
 venv
 reddit_script.log
 twitter_script.log
+__pycache__
