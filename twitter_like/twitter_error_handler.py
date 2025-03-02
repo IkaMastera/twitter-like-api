@@ -2,69 +2,67 @@ import time
 import logging
 import tweepy
 
-def handle_twitter_error(e, retry_func=None, *args, **kwargs):
+def handle_twitter_error(func):
     """
 
-    Handles Twitter API Errors and retries when necesarry.
+    A decorator that wraps a function and handles Tweepy API errors.
+    If an error occurs, it logs the error and (optionally) retries.
 
-    Args:
-        e (Exception): The Tweepy exception raised.
-        retry_func (function, optional): The function to retry on recoverable errors.
-        "args, **kwargs: Arguments to pass to the retry function.
-
-    Returns:
-        The result of the retried function if applicable, otherwise exits on fatal errors.
-    
     """
 
-    # Catch Specific Exceptions (Best Practice I found)
-    if isinstance(e, tweepy.Unauthorized):
-        logging.error("Unauthorized: Invalid API credentials. Check your keys.")
-        raise SystemExit(1)
+    def wrapper(*args, **kwargs):
+        try:
+            response = func(*args, **kwargs)
+            # If the response has errors (embedded in response), handle them:
+            if hasattr(response, "errors") and response.errors:
+                logging.error(f"API returned errors: {response.errors}")
+                raise tweepy.TweepyException("API returned errors.")
+            return response
+        
+        except tweepy.errors.Unauthorized:
+            logging.error("Unauthorized: Invalid API credentials. Check your keys.")
+            raise SystemExit(1)
 
-    elif isinstance(e, tweepy.Forbidden):
-        logging.error("Forbidden: Action not allowed (tweet may be protected or already liked).")
-        raise SystemExit(1)
+        except tweepy.errors.Forbidden:
+            logging.error("Forbidden: Action not allowed (tweet may be protected or already liked.)")
+            raise SystemExit(1)
 
-    elif isinstance(e, tweepy.NotFound):
-        logging.error("Not Found: Tweet does not exist or has been deleted.")
-        raise SystemExit(1)
-    
-    elif isinstance(e, tweepy.errors.BadRequest):
-        for error in e.api_errors:
-            if "id" in error.get("parameters", {}):
-                logging.error(f"Invalid Tweet ID: {error['parameters']['id'][0]}. Please provide a valid Tweet ID.")
+        except tweepy.errors.BadRequest as e:
+            for error in e.api_errors:
+                if "id" in error.get("parameters", {}):
+                    logging.error(f"Invalid Tweet ID: {error['parameters']['id'][0]}.")
+                    raise SystemExit(1)
+            logging.error("Bad Request: One or more parameters in the request were invalid.")
+            raise SystemExit(1)
+        
+        except tweepy.errors.TooManyRequests as e:
+            headers = e.response.headers
+            reset_time = int(headers.get("x-rate-limit-reset", time.time() + 60))
+            wait_time = max(reset_time - time.time(), 10)
+            logging.warning(f"Rate limit exceeded! Sleeping for {wait_time:.2f} seconds...")
+            time.sleep(wait_time + 1)
+            # Retry once
+            try:
+                return func(*args, **kwargs)
+            except tweepy.TweepyException:
+                logging.error("Still rate-limited after retry. Exiting.")
                 raise SystemExit(1)
         
-        logging.error("Bad Request: One or more parameters in the request were invalid.")
-        raise SystemExit(1)
-
-    # Using a Retry Mechanism for Transient Failures
-    elif isinstance(e, tweepy.TooManyRequests):
-        headers = e.response.headers
-        reset_time = int(headers.get("x-rate-limit-reset", time.time()))
-        wait_time = max(reset_time - time.time(), 10)
-        logging.warning(f"Rate limit exceeded! Sleeping for {wait_time:.2f} seconds...")
-        time.sleep(wait_time + 1)
-
-        if retry_func:
-            return retry_func(*args, **kwargs)
-        
-        logging.error("Max retries reached. Could not complete the request.")
-        raise SystemExit(1)
-
-    elif isinstance(e, tweepy.HTTPException):
-        if e.response.status_code == 500:
-            logging.warning("Twitter Internal Server Error (500). Retrying...")
+        except tweepy.errors.TwitterServerError as e:
+            logging.warning("Twitter Internal Server Error. Retrying once...")
             time.sleep(10)
-            if retry_func:
-                return retry_func(*args, **kwargs)
-        elif e.response.status_code == 400:
-            logging.error("Bad Request: Invalid tweet ID or malformed request.")
-        else:
-            logging.error(f"HTTP Error {e.response.status_code}: {e}")
-        raise SystemExit(1)
-
-    else:
-        logging.error(f"Unexpected Twitter API error: {e}")
-        raise SystemExit(1)
+            try:
+                return func(*args, **kwargs)
+            except tweepy.TweepyException:
+                logging.error("Still failing after server error retry. Exiting.")
+                raise SystemExit(1)
+        
+        except tweepy.TweepyException as e:
+            logging.error(f"Unexpected Twitter API error: {e}")
+            raise SystemExit(1)
+        
+        except Exception as e:
+            logging.error(f"An unexpected error occurred: {e}")
+            raise SystemExit(1)
+    return wrapper
+    

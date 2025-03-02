@@ -12,12 +12,10 @@ import os
 import logging
 import tweepy
 import argparse
-import time
 from dotenv import load_dotenv
 from twitter_like.twitter_error_handler import handle_twitter_error
 
-
-# Logs messages to both console and file with timestamps good practice
+# ✅ Setup Logging
 def setup_logging():
     logging.basicConfig(
         level=logging.INFO,
@@ -25,68 +23,68 @@ def setup_logging():
         handlers=[logging.FileHandler("twitter_script.log"), logging.StreamHandler()]
     )
 
+# ✅ Load OAuth 1.0a Credentials
 def load_credentials():
-    # Load enviorment variables from .env
-    load_dotenv()
-
-    # Retrieve Twitter API credentials from environment variables
+    load_dotenv()  # Load .env variables
     credentials = {
         "consumer_key": os.getenv("TWITTER_CONSUMER_KEY"),
         "consumer_secret": os.getenv("TWITTER_CONSUMER_SECRET"),
         "access_token": os.getenv("TWITTER_ACCESS_TOKEN"),
-        "access_secret": os.getenv("TWITTER_ACCESS_SECRET"),
-        "bearer_token": os.getenv("TWITTER_BEARER_TOKEN"),
+        "access_secret": os.getenv("TWITTER_ACCESS_SECRET")
     }
 
-    # Checking that all required Twitter cerdentials are provided for error handling
-    if not all([credentials["consumer_key"], credentials["consumer_secret"],
-                credentials["access_token"], credentials["access_secret"]]):
-        logging.error("Twitter API credentials not fully set in .env. Exiting.")
+    # Check if all required credentials exist
+    if not all(credentials.values()):
+        logging.error("Missing OAuth 1.0a credentials in .env file! Exiting.")
         exit(1)
+
+    logging.info("Loaded OAuth 1.0a credentials from .env.")
     return credentials
 
 def parse_arguments():
-    # Parse command-line argument for tweet ID to like
-    argument_parser = argparse.ArgumentParser(description="Like a Tweet by ID using the Twitter API.")
-    argument_parser.add_argument("tweet_id", help="The unique ID of the tweet to like.")
-    parsed_args = argument_parser.parse_args();
-    tweet_id = parsed_args.tweet_id
-    return tweet_id
+    parser = argparse.ArgumentParser(description="Like a Tweet by ID using the Twitter API.")
+    parser.add_argument("tweet_id", help="The unique ID of the tweet to like.")
+    args = parser.parse_args()
+    return args.tweet_id
 
 def initialize_twitter_client(credentials):
-    "Initialize and return a Tweepy client using the provided credentials"
+    """Initialize and return a Tweepy client using OAuth 1.0a (User Authentication)."""
     client = tweepy.Client(
-        bearer_token=credentials["bearer_token"],
         consumer_key=credentials["consumer_key"],
         consumer_secret=credentials["consumer_secret"],
         access_token=credentials["access_token"],
         access_token_secret=credentials["access_secret"],
-        wait_on_rate_limit=True
+        wait_on_rate_limit=False
     )
-    logging.info("Authenticated to Twitter API successfully.")
+
+    logging.info("Authenticated to Twitter API using OAuth 1.0a.")
     return client
-               
+
+@handle_twitter_error
 def like_tweet(client, tweet_id):
+    """Likes a tweet using the Twitter API."""
     response = client.like(tweet_id)
-
-    if not response.data:
-        logging.warning(f"Tweet ID {tweet_id} does not exist or is unavailable.")
-
-    logging.info(f"Successfully liked tweet ID: {tweet_id}.")
+    
+    # Check if the response object includes a 'response' attribute with headers.
+    if hasattr(response, 'response') and response.response:
+        headers = response.response.headers
+        remaining = headers.get('x-rate-limit-remaining', 'Unknown')
+        reset = headers.get('x-rate-limit-reset', 'Unknown')
+        logging.info(f"Rate Limit Remaining: {remaining}")
+        logging.info(f"Rate Limit Reset: {reset}")
+    else:
+        logging.warning("No rate limit headers found in the response.")
+    
+    return response
 
 def main():
     setup_logging()
     credentials = load_credentials()
     tweet_id = parse_arguments()
     client = initialize_twitter_client(credentials)
-    like_tweet(client, tweet_id)
 
-    try: 
-        handle_twitter_error(lambda: like_tweet(client, tweet_id))
-    except SystemExit:
-        logging.error("Exiting program due to an error.")
-        exit(1)
-
+    response = like_tweet(client, tweet_id)
+    logging.info(f"Successfully liked tweet ID: {tweet_id}.")
 
 if __name__ == "__main__":
-    main()    
+    main()
