@@ -1,2 +1,4 @@
 .env
 venv
+reddit_script.log
+twitter_script.log
