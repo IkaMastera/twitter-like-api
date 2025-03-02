@@ -10,19 +10,24 @@ Example:
     python reddit_fetch.py python
 """
 
-import sys
-sys.stdout.reconfigure(encoding='utf-8')
 import os
 import logging
 import argparse
 import praw
 from dotenv import load_dotenv
+from reddit_fetch.reddit_error_handler import reddit_error_handler
 
 def setup_logging():
+    log_folder = os.path.join(os.getcwd(), "reddit_fetch")
+    if not os.path.exists(log_folder):
+        os.makedirs(log_folder)
+
+    log_file_path = os.path.join(log_folder, "reddit_script.log")
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s %(message)s]",
-        handlers=[logging.StreamHandler(), logging.FileHandler("reddit_script.log")]
+        handlers=[logging.StreamHandler(), logging.FileHandler(log_file_path, encoding='utf-8')]
     )
 
 def load_reddit_credentials():
@@ -39,20 +44,17 @@ def load_reddit_credentials():
         exit(1)
     return creds
 
+@reddit_error_handler
 def fetch_latest_posts(subreddit_name, limit=5):
     creds = load_reddit_credentials()
-    try:
-        reddit = praw.Reddit(
-            client_id=creds["client_id"],
-            client_secret=creds["client_secret"],
-            user_agent=creds["user_agent"]
-        )
-        subreddit = reddit.subreddit(subreddit_name)
-        posts = subreddit.new(limit=limit)
-        return posts
-    except Exception as e:
-        logging.error(f"Error initializing Reddit client or fetching posts: {e}")
-        exit(1)
+    reddit = praw.Reddit(
+        client_id=creds["client_id"],
+        client_secret=creds["client_secret"],
+        user_agent=creds["user_agent"]
+    )
+    subreddit = reddit.subreddit(subreddit_name)
+    posts = subreddit.new(limit=limit)
+    return posts
 
 def main():
     setup_logging()
@@ -61,7 +63,7 @@ def main():
     args = parser.parse_args()
 
     posts = fetch_latest_posts(args.subreddit)
-    logging.info(f"Latest {5} posts from r/{args.subreddit}:")
+    logging.info(f"Latest 5 posts from r/{args.subreddit}:")
     for post in posts:
         logging.info(f"Title: {post.title}")
         logging.info(f"Author: {post.author}")
