@@ -67,22 +67,12 @@ def initialize_twitter_client(credentials):
     return client
                
 def like_tweet(client, tweet_id):
-    try:
-        # Use the client to like the tweet specified by tweet_id
-        response = client.like(tweet_id)
+    response = client.like(tweet_id)
 
-        if hasattr(response, "errors") and response.errors:
-            logging.error(f"Twitter API error: {response.errors}")
-        elif not response.data:
-            logging.warning(f"Tweet ID {tweet_id} does not exist or is unavailable.")
-        else:
-            logging.info(f"Successfully liked tweet by ID: {tweet_id}.")
-            exit(0) # Exit after success
+    if not response.data:
+        logging.warning(f"Tweet ID {tweet_id} does not exist or is unavailable.")
 
-        return response
-
-    except tweepy.TweepyException as e:
-        return handle_twitter_error(e, like_tweet, client, tweet_id)
+    logging.info(f"Successfully liked tweet ID: {tweet_id}.")
 
 def main():
     setup_logging()
@@ -90,6 +80,13 @@ def main():
     tweet_id = parse_arguments()
     client = initialize_twitter_client(credentials)
     like_tweet(client, tweet_id)
+
+    try: 
+        handle_twitter_error(lambda: like_tweet(client, tweet_id))
+    except SystemExit:
+        logging.error("Exiting program due to an error.")
+        exit(1)
+
 
 if __name__ == "__main__":
     main()    

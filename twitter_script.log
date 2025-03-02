@@ -26,3 +26,21 @@ Your client app is not configured with the appropriate oauth1 app permissions fo
 2025-03-01 17:03:38,726 [WARNING] Rate limit exceeded. Sleeping for 811 seconds.
 2025-03-01 17:29:05,728 [INFO] Authenticated to Twitter API successfully.
 2025-03-01 17:29:06,388 [WARNING] Rate limit exceeded. Sleeping for 903 seconds.
+2025-03-02 14:54:10,525 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 14:54:10,893 [ERROR] Unauthorized: Invalid API credentials. Check your keys.
+2025-03-02 14:57:56,267 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 14:57:56,587 [WARNING] Rate limit exceeded. Sleeping for 902 seconds.
+2025-03-02 15:07:44,529 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 15:07:44,845 [WARNING] Rate limit exceeded. Sleeping for 314 seconds.
+2025-03-02 15:10:07,061 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 15:10:07,388 [WARNING] Rate limit exceeded. Sleeping for 171 seconds.
+2025-03-02 15:12:58,571 [WARNING] Rate limit exceeded. Sleeping for 902 seconds.
+2025-03-02 15:18:37,704 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 15:18:38,015 [WARNING] Rate limit exceeded. Sleeping for 562 seconds.
+2025-03-02 15:40:35,132 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 15:40:35,455 [WARNING] Rate limit exceeded. Sleeping for 902 seconds.
+2025-03-02 15:45:05,577 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 15:45:05,888 [WARNING] Rate limit exceeded. Sleeping for 632 seconds.
+2025-03-02 16:00:43,124 [INFO] Authenticated to Twitter API successfully.
+2025-03-02 16:00:45,153 [WARNING] Rate limit exceeded. Sleeping for 902 seconds.
+2025-03-02 16:11:41,854 [INFO] Authenticated to Twitter API successfully.
