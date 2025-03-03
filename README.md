@@ -120,9 +120,9 @@ Fetches the 5 latest posts from a subreddit using PRAW. It prints and logs each 
 How to Run:
 From the project root:
 
-python -m reddit_fetch.reddit_fetch <subreddit>
+python -m reddit_fetch.reddit_fetch subreddit_name
 
-Replace <subreddit> with the subreddit name. Example:
+Replace subreddit_name with the subreddit name. Example:
 
 python -m reddit_fetch.reddit_fetch python
 
