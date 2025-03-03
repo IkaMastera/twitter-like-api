@@ -79,7 +79,9 @@ TWITTER_CONSUMER_KEY="your_twitter_api_key_here"
 
 TWITTER_CONSUMER_SECRET="your_twitter_api_key_secret_here"
 
-TWITTER_ACCESS_TOKEN="your_twitter_access_token_here" TWITTER_ACCESS_SECRET="your_twitter_access_token_secret_here"
+TWITTER_ACCESS_TOKEN="your_twitter_access_token_here" 
+
+TWITTER_ACCESS_SECRET="your_twitter_access_token_secret_here"
 
 TWITTER_BEARER_TOKEN="your_twitter_bearer_token_here" # Optional
 
