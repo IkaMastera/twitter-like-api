@@ -77,7 +77,7 @@ TWITTER_BEARER_TOKEN="your_twitter_bearer_token_here" # Optional
 
 Reddit API Credentials:
 
-- Get these by creating a Reddit app in your account preferences.
+- For detailed instructions on acquiring Reddit API credentials, please refer to [this guide](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example).
 
 REDDIT_CLIENT_ID="your_reddit_client_id_here"
 REDDIT_CLIENT_SECRET="your_reddit_client_secret_here" REDDIT_USER_AGENT="script:reddit_fetch:v1.0 (by /u/your_reddit_username)"
