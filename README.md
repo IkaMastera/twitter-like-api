@@ -71,8 +71,11 @@ Twitter API Credentials:
 - Obtain these by creating a Twitter Developer account and setting up an app with Read & Write permissions. [Learn more](https://developer.twitter.com/en/docs/authentication/oauth-1-0a).
 
 TWITTER_CONSUMER_KEY="your_twitter_api_key_here"
+
 TWITTER_CONSUMER_SECRET="your_twitter_api_key_secret_here"
+
 TWITTER_ACCESS_TOKEN="your_twitter_access_token_here" TWITTER_ACCESS_SECRET="your_twitter_access_token_secret_here"
+
 TWITTER_BEARER_TOKEN="your_twitter_bearer_token_here" # Optional
 
 Reddit API Credentials:
@@ -80,7 +83,10 @@ Reddit API Credentials:
 - For detailed instructions on acquiring Reddit API credentials, please refer to [this guide](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example).
 
 REDDIT_CLIENT_ID="your_reddit_client_id_here"
-REDDIT_CLIENT_SECRET="your_reddit_client_secret_here" REDDIT_USER_AGENT="script:reddit_fetch:v1.0 (by /u/your_reddit_username)"
+
+REDDIT_CLIENT_SECRET="your_reddit_client_secret_here"
+
+REDDIT_USER_AGENT="script:reddit_fetch:v1.0 (by /u/your_reddit_username)"
 
 > **Important:**
 >
