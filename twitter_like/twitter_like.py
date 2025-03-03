@@ -15,17 +15,27 @@ import argparse
 from dotenv import load_dotenv
 from twitter_like.twitter_error_handler import handle_twitter_error
 
-# ✅ Setup Logging
 def setup_logging():
+    # Build a path to the "twitter_like" folder within the current working directory.
+    log_folder = os.path.join(os.getcwd(), "twitter_like")
+    if not os.path.exists(log_folder):
+        os.makedirs(log_folder)
+    
+    # Define the path for the log file
+    log_file_path = os.path.join(log_folder, "twitter_script.log")
+    
+    # Configure logging to output to the file and the console.
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[logging.FileHandler("twitter_script.log"), logging.StreamHandler()]
+        handlers=[
+            logging.FileHandler(log_file_path, encoding='utf-8'),
+            logging.StreamHandler()
+        ]
     )
 
-# ✅ Load OAuth 1.0a Credentials
 def load_credentials():
-    load_dotenv()  # Load .env variables
+    load_dotenv()
     credentials = {
         "consumer_key": os.getenv("TWITTER_CONSUMER_KEY"),
         "consumer_secret": os.getenv("TWITTER_CONSUMER_SECRET"),

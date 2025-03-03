@@ -1,3 +1,0 @@
-2025-03-02 19:17:43,125 [INFO] Loaded OAuth 1.0a credentials from .env.
-2025-03-02 19:17:43,126 [INFO] Authenticated to Twitter API using OAuth 1.0a.
-2025-03-02 19:17:43,936 [WARNING] Rate limit exceeded! Sleeping for 901.06 seconds...

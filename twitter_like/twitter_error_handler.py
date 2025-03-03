@@ -1,30 +1,27 @@
-import time
 import logging
+import time
 import tweepy
 
 def handle_twitter_error(func):
     """
-
     A decorator that wraps a function and handles Tweepy API errors.
     If an error occurs, it logs the error and (optionally) retries.
-
     """
-
     def wrapper(*args, **kwargs):
         try:
             response = func(*args, **kwargs)
-            # If the response has errors (embedded in response), handle them:
+            # Check if the response has errors (if the response structure includes an errors attribute)
             if hasattr(response, "errors") and response.errors:
                 logging.error(f"API returned errors: {response.errors}")
                 raise tweepy.TweepyException("API returned errors.")
             return response
-        
+
         except tweepy.errors.Unauthorized:
             logging.error("Unauthorized: Invalid API credentials. Check your keys.")
             raise SystemExit(1)
 
         except tweepy.errors.Forbidden:
-            logging.error("Forbidden: Action not allowed (tweet may be protected or already liked.)")
+            logging.error("Forbidden: Action not allowed (tweet may be protected or already liked).")
             raise SystemExit(1)
 
         except tweepy.errors.BadRequest as e:
@@ -41,7 +38,6 @@ def handle_twitter_error(func):
             wait_time = max(reset_time - time.time(), 10)
             logging.warning(f"Rate limit exceeded! Sleeping for {wait_time:.2f} seconds...")
             time.sleep(wait_time + 1)
-            # Retry once
             try:
                 return func(*args, **kwargs)
             except tweepy.TweepyException:
@@ -57,7 +53,7 @@ def handle_twitter_error(func):
                 logging.error("Still failing after server error retry. Exiting.")
                 raise SystemExit(1)
         
-        except tweepy.TweepyException as e:
+        except tweepy.errors.TweepyException as e:
             logging.error(f"Unexpected Twitter API error: {e}")
             raise SystemExit(1)
         
@@ -65,4 +61,3 @@ def handle_twitter_error(func):
             logging.error(f"An unexpected error occurred: {e}")
             raise SystemExit(1)
     return wrapper
-    
