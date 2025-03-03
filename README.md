@@ -49,6 +49,10 @@ This project demonstrates how to interact with social media APIs using Python:
 
 1. **Clone the Repository** and navigate into the project folder.
 
+> **Important:**
+>
+> - Make sure your inside your project folder using cd command.
+
 2. **Create a virtual environment:**
 
    - **Windows:**
@@ -65,6 +69,7 @@ This project demonstrates how to interact with social media APIs using Python:
 ### Dependencies
 
 Install the required packages with:
+
 ```
 pip install tweepy python-dotenv praw
 ```
@@ -82,7 +87,7 @@ TWITTER_CONSUMER_KEY="your_twitter_api_key_here"
 
 TWITTER_CONSUMER_SECRET="your_twitter_api_key_secret_here"
 
-TWITTER_ACCESS_TOKEN="your_twitter_access_token_here" 
+TWITTER_ACCESS_TOKEN="your_twitter_access_token_here"
 
 TWITTER_ACCESS_SECRET="your_twitter_access_token_secret_here"
 
