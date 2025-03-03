@@ -5,9 +5,9 @@ Reddit Fetch Script
 - Retrieves the 5 latest posts from a specific subreddit.
 - Prints each post's title, author, and upvote count.
 Usage:
-    python reddit_fetch.py <subreddit>
+    python -m reddit_fetch.reddit_fetch <subreddit>
 Example:
-    python reddit_fetch.py python
+    python -m reddit_fetch.reddit_fetch python
 """
 
 import os

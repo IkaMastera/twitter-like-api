@@ -4,7 +4,7 @@ TWITTER LIKE SCRIPT
 - Handles rate limits and authentication errors, logging events to a file and console.
 Usage:
     1. Set up environment variables in .env (Twitter API keys and tokens).
-    2. Run: python twitter_like.py <tweet_id>
+    2. Run: python -m twitter_like.twitter_like <tweet_id>
     3. You can get your twitter ID by going in the tweet you want to like, https://x.com/lexfridman/status/1895770434580464107 in this example your tweet_id is 1895770434580464107.
 """
 

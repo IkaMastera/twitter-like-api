@@ -19,6 +19,11 @@ This project demonstrates how to interact with social media APIs using Python:
 
 ---
 
+## Prerequisites
+
+- Python 3.6+
+- Virtual Environment (recommended)
+
 ---
 
 ## Features
