@@ -89,26 +89,39 @@ REDDIT_CLIENT_SECRET="your_reddit_client_secret_here" REDDIT_USER_AGENT="script:
 
 ### Twitter Like Script
 
-Run the Twitter script by providing the tweet ID as an argument:
+This script authenticates with the Twitter API using OAuth 1.0a and likes a tweet by its ID. It handles rate limits and logs errors or success messages.
 
-python twitter_like.py <tweet_id>
+### How to Run:
 
-Example:
+From the project root:
 
-python twitter_like.py 1895770434580464107
+python -m twitter_like.twitter_like <tweet_id>
+
+Replace <tweet_id> with the tweet’s numeric ID. Example:
+
+python -m twitter_like.twitter_like 1895770434580464107
 
 _(The tweet ID is the numeric part from the tweet URL.)_
 
 ### Reddit Fetch Script
 
-Run the Reddit script by providing the subreddit name as an argument:
+Fetches the 5 latest posts from a subreddit using PRAW. It prints and logs each post’s title, author, and upvotes.
 
-python reddit_fetch.py <subreddit>
+How to Run:
+From the project root:
 
-Example:
+python -m reddit_fetch.reddit_fetch <subreddit>
 
-python reddit_fetch.py python
+Replace <subreddit> with the subreddit name. Example:
 
-This will fetch and display the 5 latest posts from the `r/python` subreddit.
+python -m reddit_fetch.reddit_fetch python
+
+**What It Does:**
+
+- **Loads credentials from .env**: Retrieves Reddit API credentials from the .env file.
+- **Authenticates with Reddit**: Uses the loaded credentials to authenticate with the Reddit API.
+- **Grabs the 5 latest posts**: Fetches the five most recent posts from the specified subreddit.
+- **Logs and prints titles, authors, and upvotes**: Records and displays the title, author, and upvote count for each post.
+- **Handles errors cleanly**: Manages any errors that occur during execution, ensuring the script doesn't crash unexpectedly.
 
 ---
