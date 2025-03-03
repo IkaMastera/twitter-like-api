@@ -52,8 +52,9 @@ def fetch_latest_posts(subreddit_name, limit=5):
         client_secret=creds["client_secret"],
         user_agent=creds["user_agent"]
     )
+
     subreddit = reddit.subreddit(subreddit_name)
-    posts = subreddit.new(limit=limit)
+    posts = list(subreddit.new(limit=limit))
     return posts
 
 def main():

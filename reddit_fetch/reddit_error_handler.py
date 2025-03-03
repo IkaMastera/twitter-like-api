@@ -10,9 +10,6 @@ def reddit_error_handler(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except prawcore.exceptions.Unauthorized:
-            logging.error("Unathorized: Check your Reddit API credential or permissions.")
-            raise SystemExit(1)
         except prawcore.exceptions.NotFound:
             logging.error("Not Found: The requested resource was not found.")
             raise SystemExit(1)
@@ -24,12 +21,12 @@ def reddit_error_handler(func):
             raise SystemExit(1)
         except prawcore.exceptions.ResponseException as e:
             if e.response and e.response.status_code == 401:
-            logging.error(f"Response Exception: {e}")
-            raise SystemExit(1)
+                logging.error(f"Response Exception: {e}")
+                raise SystemExit(1)
+            else:
+                logging.error(f"Response Exception {e}")
+                raise SystemExit(1)
         except Exception as e:
             logging.error(f"An unexpected error occurred: {e}")
             raise SystemExit(1)
-    return wrapper
-
-
     return wrapper
